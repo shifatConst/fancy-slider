@@ -10,10 +10,6 @@ const spinner = document.getElementById('spinner');
 // selected image 
 let sliders = [];
 
-
-// If this key doesn't work
-// Find the name in the url and go to their website
-// to create your own api key
 const KEY = '15674931-a9d714b6e9d654524df198e00&q';
 
 // show images 
@@ -39,19 +35,17 @@ const getImages = (query) => {
     .then(data => {
       if(data.hits.length){
         showImages(data.hits)
-      } else {
+      } else {      //bonus 2
         alert("Search results not found");
         gallery.innerHTML = '';
         toggleItem(false);
       }
     })
-    .catch(err => console.log(err))
 }
 
 let slideIndex = 0;
 const selectItem = (event, img) => {
   let element = event.target;
-  // element.classList.add('added');
  
   let item = sliders.indexOf(img);
   if (item === -1) {
@@ -94,16 +88,13 @@ const createSlider = () => {
   changeSlide(0)
   if(slideDuration < 0) {
     alert("Duration can't be negative");
+    return;
   } else {
     timer = setInterval(function () {
       slideIndex++;
       changeSlide(slideIndex);
     }, slideDuration);
   }
-  // timer = setInterval(function () {
-  //   slideIndex++;
-  //   changeSlide(slideIndex);
-  // }, duration);
 }
 
 // change slider index 
@@ -140,6 +131,8 @@ const toggleItem = (show) => {
   }
 }
 
+//bonus 1
+//Enter button activity function
 const keyActivity = (inputArea, button) => {
   inputArea.addEventListener('keypress', function (event) {
   if(event.key === 'Enter') {
@@ -157,19 +150,6 @@ searchBtn.addEventListener('click', function () {
   getImages(search.value)
   sliders.length = 0;
 })
-
-
-// searchInput.addEventListener('keypress', function (event) {
-//   if(event.key === 'Enter') {
-//     searchBtn.click();
-//   }
-// })
-
-// duration.addEventListener('keypress', function (event) {
-//   if(event.key === 'Enter') {
-//     sliderBtn.click();
-//   }
-// })
 sliderBtn.addEventListener('click', function () {
   createSlider()
 })
