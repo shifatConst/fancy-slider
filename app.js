@@ -36,7 +36,15 @@ const getImages = (query) => {
   toggleItem(true);
   fetch(`https://pixabay.com/api/?key=${KEY}=${query}&image_type=photo&pretty=true`)
     .then(response => response.json())
-    .then(data => showImages(data.hits))
+    .then(data => {
+      if(data.hits.length){
+        showImages(data.hits)
+      } else {
+        alert("Search results not found");
+        gallery.innerHTML = '';
+        toggleItem(false);
+      }
+    })
     .catch(err => console.log(err))
 }
 
@@ -132,6 +140,16 @@ const toggleItem = (show) => {
   }
 }
 
+const keyActivity = (inputArea, button) => {
+  inputArea.addEventListener('keypress', function (event) {
+  if(event.key === 'Enter') {
+    button.click();
+  }
+})
+}
+keyActivity(searchInput, searchBtn);
+keyActivity(duration, sliderBtn);
+
 searchBtn.addEventListener('click', function () {
   document.querySelector('.main').style.display = 'none';
   clearInterval(timer);
@@ -140,17 +158,18 @@ searchBtn.addEventListener('click', function () {
   sliders.length = 0;
 })
 
-searchInput.addEventListener('keypress', function (event) {
-  if(event.key === 'Enter') {
-    searchBtn.click();
-  }
-})
 
-duration.addEventListener('keypress', function (event) {
-  if(event.key === 'Enter') {
-    sliderBtn.click();
-  }
-})
+// searchInput.addEventListener('keypress', function (event) {
+//   if(event.key === 'Enter') {
+//     searchBtn.click();
+//   }
+// })
+
+// duration.addEventListener('keypress', function (event) {
+//   if(event.key === 'Enter') {
+//     sliderBtn.click();
+//   }
+// })
 sliderBtn.addEventListener('click', function () {
   createSlider()
 })
