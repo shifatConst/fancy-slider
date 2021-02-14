@@ -2,8 +2,11 @@ const imagesArea = document.querySelector('.images');
 const gallery = document.querySelector('.gallery');
 const galleryHeader = document.querySelector('.gallery-header');
 const searchBtn = document.getElementById('search-btn');
+const searchInput = document.getElementById('search');
 const sliderBtn = document.getElementById('create-slider');
 const sliderContainer = document.getElementById('sliders');
+const duration = document.getElementById('duration');
+const spinner = document.getElementById('spinner');
 // selected image 
 let sliders = [];
 
@@ -23,12 +26,14 @@ const showImages = (images) => {
     let div = document.createElement('div');
     div.className = 'col-lg-3 col-md-4 col-xs-6 img-item mb-2';
     div.innerHTML = ` <img class="img-fluid img-thumbnail" onclick=selectItem(event,"${image.webformatURL}") src="${image.webformatURL}" alt="${image.tags}">`;
-    gallery.appendChild(div)
+    gallery.appendChild(div);
+    toggleItem(false);
   })
-
+  
 }
 
 const getImages = (query) => {
+  toggleItem(true);
   fetch(`https://pixabay.com/api/?key=${KEY}=${query}&image_type=photo&pretty=true`)
     .then(response => response.json())
     .then(data => showImages(data.hits))
@@ -38,13 +43,14 @@ const getImages = (query) => {
 let slideIndex = 0;
 const selectItem = (event, img) => {
   let element = event.target;
-  element.classList.add('added');
+  // element.classList.add('added');
  
   let item = sliders.indexOf(img);
   if (item === -1) {
+    element.classList.toggle('added');
     sliders.push(img);
   } else {
-    alert('Hey, Already added !')
+    element.classList.toggle('added');
   }
 }
 
@@ -68,7 +74,7 @@ const createSlider = () => {
   document.querySelector('.main').style.display = 'block';
   // hide image aria
   imagesArea.style.display = 'none';
-  const duration = document.getElementById('duration').value || 1000;
+  const slideDuration = duration.value || 1000;
   sliders.forEach(slide => {
     let item = document.createElement('div')
     item.className = "slider-item";
@@ -78,13 +84,13 @@ const createSlider = () => {
     sliderContainer.appendChild(item)
   })
   changeSlide(0)
-  if(duration < 0) {
-    alert("can't be negative");
+  if(slideDuration < 0) {
+    alert("Duration can't be negative");
   } else {
     timer = setInterval(function () {
       slideIndex++;
       changeSlide(slideIndex);
-    }, duration);
+    }, slideDuration);
   }
   // timer = setInterval(function () {
   //   slideIndex++;
@@ -118,6 +124,14 @@ const changeSlide = (index) => {
   items[index].style.display = "block"
 }
 
+const toggleItem = (show) => {
+  if (show) {
+    spinner.classList.toggle('d-none');
+  } else {
+    spinner.classList.add('d-none');
+  }
+}
+
 searchBtn.addEventListener('click', function () {
   document.querySelector('.main').style.display = 'none';
   clearInterval(timer);
@@ -126,6 +140,17 @@ searchBtn.addEventListener('click', function () {
   sliders.length = 0;
 })
 
+searchInput.addEventListener('keypress', function (event) {
+  if(event.key === 'Enter') {
+    searchBtn.click();
+  }
+})
+
+duration.addEventListener('keypress', function (event) {
+  if(event.key === 'Enter') {
+    sliderBtn.click();
+  }
+})
 sliderBtn.addEventListener('click', function () {
   createSlider()
 })
