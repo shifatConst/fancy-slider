@@ -1,2 +1,2 @@
 # fancy-slider
-[Live Link](https://shifat-const.github.io/fancy-slider/)
+[Live Link](https://shifatConst.github.io/fancy-slider/)
